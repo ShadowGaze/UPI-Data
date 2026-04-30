@@ -5,7 +5,7 @@
 <a href="{{ url_for('transactions.list_transactions') }}" class="back-link">← Back to Transactions</a>
 <h1 class="page-title">
   {{ txn['transaction_id'] }}
-  {% if txn['is_fraud'] %}<span class="badge badge-danger">⚠️ FRAUD</span>{% endif %}
+  {% if txn['is_fraud'] %}<span class="badge badge-danger"> FRAUD</span>{% endif %}
 </h1>
 
 <div class="detail-grid">
@@ -44,7 +44,7 @@
 
   {% if user %}
   <div class="card">
-    <h3>👤 Linked User</h3>
+    <h3> Linked User</h3>
     <table class="detail-table">
       <tr><th>User ID</th><td><a href="{{ url_for('users.user_detail', uid=user['user_id']) }}">{{ user['user_id'] }}</a></td></tr>
       <tr><th>City</th><td>{{ user['city'] }} ({{ user['city_tier'] }})</td></tr>
@@ -59,7 +59,7 @@
 
   {% if merchant %}
   <div class="card">
-    <h3>🏪 Linked Merchant</h3>
+    <h3> Linked Merchant</h3>
     <table class="detail-table">
       <tr><th>Name</th><td><a href="{{ url_for('merchants.merchant_detail', mid=merchant['merchant_id']) }}">{{ merchant['merchant_name'] }}</a></td></tr>
       <tr><th>Category</th><td>{{ merchant['merchant_category'] }}</td></tr>

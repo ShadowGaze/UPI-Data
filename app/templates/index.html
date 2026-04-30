@@ -4,19 +4,24 @@
 {% block content %}
 
 <!-- ── Page Header ─────────────────────────────────────────────── -->
-<div class="dash-header">
-  <div>
+<div class="dash-hero">
+  <div class="dash-hero-content">
+    <span class="dash-eyebrow">Fraud Monitoring Overview</span>
     <h1 class="dash-title">Payment Intelligence Dashboard</h1>
     <p class="dash-subtitle">
-      Real-time overview of UPI transaction data, user activity, and fraud signals.
+      Explore transaction activity, linked user and merchant records, and fraud indicators
+      from the UPI dataset through a clean analytical dashboard.
     </p>
   </div>
-  <div class="dash-actions">
-    <a href="{{ url_for('analysis.analysis') }}" class="btn">
-      📊 View Full Analysis
+
+  <div class="dash-hero-actions">
+    <a href="{{ url_for('analysis.analysis') }}" class="btn btn-hero">
+      
+      <span>View Full Analysis</span>
     </a>
-    <a href="{{ url_for('transactions.list_transactions') }}" class="btn btn-outline">
-      Browse Transactions
+
+    <a href="{{ url_for('transactions.list_transactions') }}" class="btn btn-outline btn-hero-outline">
+      <span>Browse Transactions</span>
     </a>
   </div>
 </div>
@@ -81,22 +86,22 @@
 <!-- ── Quick Nav ───────────────────────────────────────────────── -->
 <div class="quick-nav">
   <a href="{{ url_for('transactions.list_transactions') }}" class="quick-nav-item">
-    <span class="qn-icon">💳</span>
+   
     <span class="qn-label">Transactions</span>
     <span class="qn-arrow">→</span>
   </a>
   <a href="{{ url_for('users.list_users') }}" class="quick-nav-item">
-    <span class="qn-icon">👤</span>
+    
     <span class="qn-label">Users</span>
     <span class="qn-arrow">→</span>
   </a>
   <a href="{{ url_for('merchants.list_merchants') }}" class="quick-nav-item">
-    <span class="qn-icon">🏪</span>
+    
     <span class="qn-label">Merchants</span>
     <span class="qn-arrow">→</span>
   </a>
   <a href="{{ url_for('analysis.analysis') }}" class="quick-nav-item">
-    <span class="qn-icon">📊</span>
+    
     <span class="qn-label">Analysis</span>
     <span class="qn-arrow">→</span>
   </a>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}PayGuard{% endblock %} — PayGuard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="nav-inner">
+    <a href="{{ url_for('main.index') }}" class="nav-brand">💳 PayGuard</a>
+    <ul class="nav-links">
+      <li><a href="{{ url_for('main.index') }}"
+        class="{{ 'active' if request.endpoint == 'main.index' else '' }}">Home</a></li>
+      <li><a href="{{ url_for('transactions.list_transactions') }}"
+        class="{{ 'active' if 'transactions' in request.endpoint else '' }}">Transactions</a></li>
+      <li><a href="{{ url_for('users.list_users') }}"
+        class="{{ 'active' if 'users' in request.endpoint else '' }}">Users</a></li>
+      <li><a href="{{ url_for('merchants.list_merchants') }}"
+        class="{{ 'active' if 'merchants' in request.endpoint else '' }}">Merchants</a></li>
+      <li><a href="{{ url_for('analysis.analysis') }}"
+        class="{{ 'active' if request.endpoint == 'analysis.analysis' else '' }}">Analysis</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main class="container">
+  {% block content %}{% endblock %}
+</main>
+
+<footer class="footer">
+  <p>PayGuard — Digital Payment Fraud Analysis | CS551P Advanced Programming</p>
+</footer>
+
+</body>
+</html>

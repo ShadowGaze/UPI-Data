@@ -1,0 +1,193 @@
+{% extends 'base.html' %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+
+<!-- ── Page Header ─────────────────────────────────────────────── -->
+<div class="dash-header">
+  <div>
+    <h1 class="dash-title">Payment Intelligence Dashboard</h1>
+    <p class="dash-subtitle">
+      Real-time overview of UPI transaction data, user activity, and fraud signals.
+    </p>
+  </div>
+  <div class="dash-actions">
+    <a href="{{ url_for('analysis.analysis') }}" class="btn">
+      📊 View Full Analysis
+    </a>
+    <a href="{{ url_for('transactions.list_transactions') }}" class="btn btn-outline">
+      Browse Transactions
+    </a>
+  </div>
+</div>
+
+<!-- ── Stat Cards ──────────────────────────────────────────────── -->
+<div class="stats-grid">
+
+  <div class="stat-card">
+    <div class="stat-icon-wrap stat-icon-teal">
+      <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"
+           viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/>
+        <path d="M2 10h20"/></svg>
+    </div>
+    <div class="stat-body">
+      <p class="stat-label">Total Transactions</p>
+      <p class="stat-value">{{ "{:,}".format(stats.total_transactions) }}</p>
+    </div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-icon-wrap stat-icon-blue">
+      <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"
+           viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/>
+        <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+    </div>
+    <div class="stat-body">
+      <p class="stat-label">Registered Users</p>
+      <p class="stat-value">{{ "{:,}".format(stats.total_users) }}</p>
+    </div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-icon-wrap stat-icon-green">
+      <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"
+           viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+        <polyline points="9 22 9 12 15 12 15 22"/></svg>
+    </div>
+    <div class="stat-body">
+      <p class="stat-label">Active Merchants</p>
+      <p class="stat-value">{{ "{:,}".format(stats.total_merchants) }}</p>
+    </div>
+  </div>
+
+  <div class="stat-card stat-card-alert">
+    <div class="stat-icon-wrap stat-icon-danger">
+      <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"
+           viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+        <line x1="12" y1="9" x2="12" y2="13"/>
+        <line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    </div>
+    <div class="stat-body">
+      <p class="stat-label">Flagged as Fraud</p>
+      <p class="stat-value">{{ "{:,}".format(stats.total_fraud) }}</p>
+      <p class="stat-sub">
+        {{ "%.1f"|format(stats.total_fraud / [stats.total_transactions, 1]|max * 100) }}% of all transactions
+      </p>
+    </div>
+  </div>
+
+</div>
+
+<!-- ── Quick Nav ───────────────────────────────────────────────── -->
+<div class="quick-nav">
+  <a href="{{ url_for('transactions.list_transactions') }}" class="quick-nav-item">
+    <span class="qn-icon">💳</span>
+    <span class="qn-label">Transactions</span>
+    <span class="qn-arrow">→</span>
+  </a>
+  <a href="{{ url_for('users.list_users') }}" class="quick-nav-item">
+    <span class="qn-icon">👤</span>
+    <span class="qn-label">Users</span>
+    <span class="qn-arrow">→</span>
+  </a>
+  <a href="{{ url_for('merchants.list_merchants') }}" class="quick-nav-item">
+    <span class="qn-icon">🏪</span>
+    <span class="qn-label">Merchants</span>
+    <span class="qn-arrow">→</span>
+  </a>
+  <a href="{{ url_for('analysis.analysis') }}" class="quick-nav-item">
+    <span class="qn-icon">📊</span>
+    <span class="qn-label">Analysis</span>
+    <span class="qn-arrow">→</span>
+  </a>
+</div>
+
+<!-- ── Recent Transactions ─────────────────────────────────────── -->
+<div class="section-header">
+  <h2 class="section-title" style="margin:0; border:none; padding:0;">
+    Recent Transactions
+  </h2>
+  <a href="{{ url_for('transactions.list_transactions') }}" class="section-link">
+    View all →
+  </a>
+</div>
+
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Transaction ID</th>
+        <th>User</th>
+        <th>Amount (₹)</th>
+        <th>Type</th>
+        <th>App</th>
+        <th>Status</th>
+        <th>Fraud</th>
+        <th>Time</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for t in recent %}
+      <tr>
+        <td>
+          <a href="{{ url_for('transactions.transaction_detail', tid=t['transaction_id']) }}"
+             class="link-mono">
+            {{ t['transaction_id'] }}
+          </a>
+        </td>
+        <td>
+          <a href="{{ url_for('users.user_detail', uid=t['user_id']) }}"
+             class="link-subtle">
+            {{ t['user_id'] }}
+          </a>
+        </td>
+        <td class="amount-cell">
+          {{ "{:,.2f}".format(t['amount'] or 0) }}
+        </td>
+        <td>
+          <span class="type-tag">{{ t['transaction_type'] }}</span>
+        </td>
+        <td class="text-muted">{{ t['payment_app'] }}</td>
+        <td>
+          <span class="badge {{ 'badge-success' if t['status'] == 'Success' else 'badge-warning' }}">
+            {{ t['status'] }}
+          </span>
+        </td>
+        <td>
+          {% if t['is_fraud'] %}
+            <span class="badge badge-danger">⚠ Fraud</span>
+          {% else %}
+            <span class="badge badge-success">✓ Clean</span>
+          {% endif %}
+        </td>
+        <td class="text-muted small time-cell">
+          {{ t['timestamp'] }}
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="8" class="empty-row">
+          <span>No recent transactions found.</span>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<!-- ── Data Info Banner ────────────────────────────────────────── -->
+<div class="info-banner">
+  <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
+       viewBox="0 0 24 24" style="flex-shrink:0;">
+    <circle cx="12" cy="12" r="10"/>
+    <line x1="12" y1="8" x2="12" y2="12"/>
+    <line x1="12" y1="16" x2="12.01" y2="16"/>
+  </svg>
+  <span>
+    Data sourced from open UPI payment transaction records.
+    Records loaded into a SQLite3 database via CSV import.
+    <a href="{{ url_for('analysis.analysis') }}">View analysis →</a>
+  </span>
+</div>
+
+{% endblock %}

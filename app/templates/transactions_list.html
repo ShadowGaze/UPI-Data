@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block title %}Transactions{% endblock %}
+
+{% block content %}
+<h1 class="page-title">Transactions <span class="total-badge">{{ "{:,}".format(total) }} records</span></h1>
+
+<form class="search-form" method="GET">
+  <input type="text" name="search" value="{{ search }}" placeholder="Search ID, user, app, type…">
+  <select name="status">
+    <option value="">All Statuses</option>
+    {% for s in statuses %}
+      <option value="{{ s }}" {{ 'selected' if status == s }}>{{ s }}</option>
+    {% endfor %}
+  </select>
+  <select name="fraud">
+    <option value="">All</option>
+    <option value="1" {{ 'selected' if fraud == '1' }}>Fraud Only</option>
+    <option value="0" {{ 'selected' if fraud == '0' }}>Clean Only</option>
+  </select>
+  <button type="submit" class="btn">Search</button>
+  <a href="{{ url_for('transactions.list_transactions') }}" class="btn btn-outline">Clear</a>
+</form>
+
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr><th>ID</th><th>User</th><th>Amount (₹)</th><th>Type</th><th>App</th><th>Status</th><th>Fraud</th><th>Timestamp</th></tr>
+    </thead>
+    <tbody>
+      {% for t in transactions %}
+      <tr>
+        <td><a href="{{ url_for('transactions.transaction_detail', tid=t['transaction_id']) }}">{{ t['transaction_id'] }}</a></td>
+        <td><a href="{{ url_for('users.user_detail', uid=t['user_id']) }}">{{ t['user_id'] }}</a></td>
+        <td>{{ "{:,.2f}".format(t['amount'] or 0) }}</td>
+        <td>{{ t['transaction_type'] }}</td>
+        <td>{{ t['payment_app'] }}</td>
+        <td><span class="badge {{ 'badge-success' if t['status']=='Success' else 'badge-warning' }}">{{ t['status'] }}</span></td>
+        <td>{% if t['is_fraud'] %}<span class="badge badge-danger">Fraud</span>{% else %}<span class="badge badge-success">Clean</span>{% endif %}</td>
+        <td class="text-muted small">{{ t['timestamp'] }}</td>
+      </tr>
+      {% else %}
+      <tr><td colspan="8" class="text-center text-muted">No results found.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% if total_pages > 1 %}
+<div class="pagination">
+  {% if page > 1 %}
+    <a href="?page={{ page-1 }}&search={{ search }}&status={{ status }}&fraud={{ fraud }}" class="btn btn-outline">← Prev</a>
+  {% endif %}
+  <span class="page-info">Page {{ page }} of {{ total_pages }}</span>
+  {% if page < total_pages %}
+    <a href="?page={{ page+1 }}&search={{ search }}&status={{ status }}&fraud={{ fraud }}" class="btn btn-outline">Next →</a>
+  {% endif %}
+</div>
+{% endif %}
+{% endblock %}

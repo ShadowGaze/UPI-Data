@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% block title %}Transaction {{ txn['transaction_id'] }}{% endblock %}
+
+{% block content %}
+<a href="{{ url_for('transactions.list_transactions') }}" class="back-link">← Back to Transactions</a>
+<h1 class="page-title">
+  {{ txn['transaction_id'] }}
+  {% if txn['is_fraud'] %}<span class="badge badge-danger">⚠️ FRAUD</span>{% endif %}
+</h1>
+
+<div class="detail-grid">
+
+  <div class="card">
+    <h3>Transaction Details</h3>
+    <table class="detail-table">
+      <tr><th>Amount</th><td>₹{{ "{:,.2f}".format(txn['amount'] or 0) }}</td></tr>
+      <tr><th>Type</th><td>{{ txn['transaction_type'] }}</td></tr>
+      <tr><th>Payment App</th><td>{{ txn['payment_app'] }}</td></tr>
+      <tr><th>Device</th><td>{{ txn['device_type'] }}</td></tr>
+      <tr><th>Status</th><td>
+        <span class="badge {{ 'badge-success' if txn['status']=='Success' else 'badge-warning' }}">{{ txn['status'] }}</span>
+      </td></tr>
+      <tr><th>Timestamp</th><td>{{ txn['timestamp'] }}</td></tr>
+      <tr><th>Day / Hour</th><td>{{ txn['day_of_week'] }} at {{ txn['hour_of_day'] }}:00</td></tr>
+      <tr><th>Weekend</th><td>{{ 'Yes' if txn['is_weekend'] else 'No' }}</td></tr>
+      <tr><th>Night Txn</th><td>{{ 'Yes' if txn['is_night_transaction'] else 'No' }}</td></tr>
+      <tr><th>Balance After</th><td>₹{{ "{:,.2f}".format(txn['balance_after_transaction'] or 0) }}</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>Risk Signals</h3>
+    <table class="detail-table">
+      <tr><th>New Device</th><td class="{{ 'risk-yes' if txn['new_device_flag'] else '' }}">{{ 'Yes ⚠️' if txn['new_device_flag'] else 'No' }}</td></tr>
+      <tr><th>IP Mismatch</th><td class="{{ 'risk-yes' if txn['ip_location_mismatch'] else '' }}">{{ 'Yes ⚠️' if txn['ip_location_mismatch'] else 'No' }}</td></tr>
+      <tr><th>Failed Attempts (24h)</th><td>{{ txn['failed_attempts_last_24h'] }}</td></tr>
+      <tr><th>Txn Velocity</th><td>{{ txn['transaction_velocity'] }}</td></tr>
+      <tr><th>Amount Deviation</th><td>{{ txn['amount_deviation_score'] }}</td></tr>
+      <tr><th>Frequency Score</th><td>{{ txn['transaction_frequency_score'] }}</td></tr>
+      <tr><th>Receiver Type</th><td>{{ txn['receiver_type'] }}</td></tr>
+      <tr><th>Receiver ID</th><td>{{ txn['receiver_id'] }}</td></tr>
+    </table>
+  </div>
+
+  {% if user %}
+  <div class="card">
+    <h3>👤 Linked User</h3>
+    <table class="detail-table">
+      <tr><th>User ID</th><td><a href="{{ url_for('users.user_detail', uid=user['user_id']) }}">{{ user['user_id'] }}</a></td></tr>
+      <tr><th>City</th><td>{{ user['city'] }} ({{ user['city_tier'] }})</td></tr>
+      <tr><th>Age Group</th><td>{{ user['age_group'] }}</td></tr>
+      <tr><th>KYC Status</th><td>{{ user['kyc_status'] }}</td></tr>
+      <tr><th>Preferred App</th><td>{{ user['preferred_app'] }}</td></tr>
+      <tr><th>Loyalty Score</th><td>{{ user['user_loyalty_score'] }}</td></tr>
+      <tr><th>High Risk</th><td class="{{ 'risk-yes' if user['is_high_risk_user'] else '' }}">{{ 'Yes ⚠️' if user['is_high_risk_user'] else 'No' }}</td></tr>
+    </table>
+  </div>
+  {% endif %}
+
+  {% if merchant %}
+  <div class="card">
+    <h3>🏪 Linked Merchant</h3>
+    <table class="detail-table">
+      <tr><th>Name</th><td><a href="{{ url_for('merchants.merchant_detail', mid=merchant['merchant_id']) }}">{{ merchant['merchant_name'] }}</a></td></tr>
+      <tr><th>Category</th><td>{{ merchant['merchant_category'] }}</td></tr>
+      <tr><th>City</th><td>{{ merchant['city'] }} ({{ merchant['city_tier'] }})</td></tr>
+      <tr><th>Size</th><td>{{ merchant['merchant_size'] }}</td></tr>
+      <tr><th>Rating</th><td>{{ merchant['rating'] }} / 5.0</td></tr>
+      <tr><th>Registered</th><td>{{ 'Yes' if merchant['is_registered'] else 'No' }}</td></tr>
+    </table>
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}

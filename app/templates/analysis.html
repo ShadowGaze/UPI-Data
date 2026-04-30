@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% block title %}Analysis{% endblock %}
+
+{% block content %}
+<h1 class="page-title">📊 Fraud & Transaction Analysis</h1>
+
+<div class="charts-grid">
+  <div class="card">
+    <h3>Fraud vs Legitimate</h3>
+    <img src="{{ url_for('static', filename='charts/fraud_bar.png') }}"
+         alt="Fraud vs Legitimate" loading="lazy" width="500" height="350">
+  </div>
+  <div class="card">
+    <h3>Transactions by Payment App</h3>
+    <img src="{{ url_for('static', filename='charts/payment_apps.png') }}"
+         alt="Payment Apps" loading="lazy" width="600" height="350">
+  </div>
+  <div class="card">
+    <h3>Volume by Hour of Day</h3>
+    <img src="{{ url_for('static', filename='charts/hourly.png') }}"
+         alt="Hourly Volume" loading="lazy" width="700" height="350">
+  </div>
+  <div class="card">
+    <h3>Transaction Type Distribution</h3>
+    <img src="{{ url_for('static', filename='charts/txn_pie.png') }}"
+         alt="Transaction Types" loading="lazy" width="500" height="400">
+  </div>
+</div>
+
+<h2 class="section-title">Fraud by Payment App</h2>
+<div class="table-wrap">
+  <table>
+    <thead><tr><th>App</th><th>Total</th><th>Fraud</th><th>Fraud Rate</th></tr></thead>
+    <tbody>
+      {% for row in fraud_by_app %}
+      <tr>
+        <td>{{ row['payment_app'] }}</td>
+        <td>{{ row['total'] }}</td>
+        <td>{{ row['fraud_count'] or 0 }}</td>
+        <td>{{ "%.1f"|format((row['fraud_count'] or 0) / (row['total'] or 1) * 100) }}%</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<h2 class="section-title">Transactions by Day of Week</h2>
+<div class="table-wrap">
+  <table>
+    <thead><tr><th>Day</th><th>Count</th><th>Avg Amount (₹)</th></tr></thead>
+    <tbody>
+      {% for row in by_day %}
+      <tr><td>{{ row['day_of_week'] }}</td><td>{{ row['count'] }}</td><td>{{ row['avg_amount'] }}</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<h2 class="section-title">Transactions by Type</h2>
+<div class="table-wrap">
+  <table>
+    <thead><tr><th>Type</th><th>Count</th><th>Total Amount (₹)</th></tr></thead>
+    <tbody>
+      {% for row in by_type %}
+      <tr><td>{{ row['transaction_type'] }}</td><td>{{ row['count'] }}</td><td>{{ "{:,.2f}".format(row['total'] or 0) }}</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<h2 class="section-title">Transactions by City Tier</h2>
+<div class="table-wrap">
+  <table>
+    <thead><tr><th>City Tier</th><th>Count</th><th>Fraud Count</th></tr></thead>
+    <tbody>
+      {% for row in by_tier %}
+      <tr><td>{{ row['user_city_tier'] }}</td><td>{{ row['count'] }}</td><td>{{ row['fraud'] or 0 }}</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

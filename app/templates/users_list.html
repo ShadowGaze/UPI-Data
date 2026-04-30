@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block title %}Users{% endblock %}
+
+{% block content %}
+<h1 class="page-title">Users <span class="total-badge">{{ "{:,}".format(total) }} records</span></h1>
+
+<form class="search-form" method="GET">
+  <input type="text" name="search" value="{{ search }}" placeholder="Search by user ID, city, app…">
+  <button type="submit" class="btn">Search</button>
+  <a href="{{ url_for('users.list_users') }}" class="btn btn-outline">Clear</a>
+</form>
+
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr><th>User ID</th><th>Age Group</th><th>City</th><th>Tier</th><th>KYC</th><th>Preferred App</th><th>Loyalty</th><th>High Risk</th></tr>
+    </thead>
+    <tbody>
+      {% for u in users %}
+      <tr>
+        <td><a href="{{ url_for('users.user_detail', uid=u['user_id']) }}">{{ u['user_id'] }}</a></td>
+        <td>{{ u['age_group'] }}</td>
+        <td>{{ u['city'] }}</td>
+        <td>{{ u['city_tier'] }}</td>
+        <td>{{ u['kyc_status'] }}</td>
+        <td>{{ u['preferred_app'] }}</td>
+        <td>{{ u['user_loyalty_score'] }}</td>
+        <td>{% if u['is_high_risk_user'] %}<span class="badge badge-danger">Yes</span>{% else %}<span class="badge badge-success">No</span>{% endif %}</td>
+      </tr>
+      {% else %}
+      <tr><td colspan="8" class="text-center text-muted">No users found.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% if total_pages > 1 %}
+<div class="pagination">
+  {% if page > 1 %}<a href="?page={{ page-1 }}&search={{ search }}" class="btn btn-outline">← Prev</a>{% endif %}
+  <span class="page-info">Page {{ page }} of {{ total_pages }}</span>
+  {% if page < total_pages %}<a href="?page={{ page+1 }}&search={{ search }}" class="btn btn-outline">Next →</a>{% endif %}
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% block title %}User {{ user['user_id'] }}{% endblock %}
+
+{% block content %}
+<a href="{{ url_for('users.list_users') }}" class="back-link">← Back to Users</a>
+<h1 class="page-title">
+  👤 {{ user['user_id'] }}
+  {% if user['is_high_risk_user'] %}<span class="badge badge-danger">High Risk</span>{% endif %}
+</h1>
+
+<div class="detail-grid">
+  <div class="card">
+    <h3>Profile</h3>
+    <table class="detail-table">
+      <tr><th>Age Group</th><td>{{ user['age_group'] }}</td></tr>
+      <tr><th>City</th><td>{{ user['city'] }} ({{ user['city_tier'] }})</td></tr>
+      <tr><th>KYC Status</th><td>{{ user['kyc_status'] }}</td></tr>
+      <tr><th>Account Age</th><td>{{ user['account_age_days'] }} days</td></tr>
+      <tr><th>Linked Banks</th><td>{{ user['linked_bank_count'] }}</td></tr>
+      <tr><th>Preferred App</th><td>{{ user['preferred_app'] }}</td></tr>
+      <tr><th>Preferred Device</th><td>{{ user['preferred_device'] }}</td></tr>
+      <tr><th>Avg Monthly Txns</th><td>{{ user['avg_monthly_transactions'] }}</td></tr>
+      <tr><th>Avg Txn Value</th><td>₹{{ user['avg_transaction_value'] }}</td></tr>
+      <tr><th>Loyalty Score</th><td>{{ user['user_loyalty_score'] }}</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>Transaction Summary</h3>
+    <table class="detail-table">
+      <tr><th>Total Transactions</th><td>{{ user_stats['total'] }}</td></tr>
+      <tr><th>Total Amount</th><td>₹{{ "{:,.2f}".format(user_stats['total_amount'] or 0) }}</td></tr>
+      <tr><th>Average Amount</th><td>₹{{ "{:,.2f}".format(user_stats['avg_amount'] or 0) }}</td></tr>
+      <tr><th>Fraud Transactions</th>
+        <td>{% if user_stats['fraud_count'] %}<span class="badge badge-danger">{{ user_stats['fraud_count'] }}</span>{% else %}<span class="badge badge-success">0</span>{% endif %}</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<h2 class="section-title">Recent Transactions</h2>
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr><th>ID</th><th>Amount (₹)</th><th>Type</th><th>App</th><th>Status</th><th>Fraud</th><th>Timestamp</th></tr>
+    </thead>
+    <tbody>
+      {% for t in transactions %}
+      <tr>
+        <td><a href="{{ url_for('transactions.transaction_detail', tid=t['transaction_id']) }}">{{ t['transaction_id'] }}</a></td>
+        <td>{{ "{:,.2f}".format(t['amount'] or 0) }}</td>
+        <td>{{ t['transaction_type'] }}</td>
+        <td>{{ t['payment_app'] }}</td>
+        <td><span class="badge {{ 'badge-success' if t['status']=='Success' else 'badge-warning' }}">{{ t['status'] }}</span></td>
+        <td>{% if t['is_fraud'] %}<span class="badge badge-danger">Fraud</span>{% else %}<span class="badge badge-success">Clean</span>{% endif %}</td>
+        <td class="text-muted small">{{ t['timestamp'] }}</td>
+      </tr>
+      {% else %}
+      <tr><td colspan="7" class="text-center text-muted">No transactions.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

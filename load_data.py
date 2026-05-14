@@ -1,7 +1,7 @@
 import csv
 import os
 import sqlite3
-from database import init_db, DATABASE
+from database import init_db
 
 BOOL_COLS = {
     "is_weekend", "is_night_transaction", "new_device_flag",

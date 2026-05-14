@@ -1,4 +1,6 @@
 import os
+import warnings
+warnings.filterwarnings('ignore', category=UserWarning, module='matplotlib')
 
 
 def generate_all(db, root_path):
@@ -21,7 +23,7 @@ def generate_all(db, root_path):
     rows = db.execute(
         "SELECT is_fraud, COUNT(*) FROM transactions GROUP BY is_fraud").fetchall()
     counts = {r[0]: r[1] for r in rows}
-    fig, ax = plt.subplots(figsize=(5, 3.5))
+    fig, ax = plt.subplots(figsize=(5, 4.5))
     bars = ax.bar(["Legitimate", "Fraud"],
                   [counts.get(0, 0), counts.get(1, 0)],
                   color=[TEAL, PURPLE], width=0.5)
@@ -31,7 +33,7 @@ def generate_all(db, root_path):
     ax.set_title("Fraud vs Legitimate Transactions", fontweight="bold")
     ax.set_ylabel("Count")
     clean(ax)
-    plt.tight_layout()
+    plt.tight_layout(pad=2.0)
     plt.savefig(os.path.join(charts_dir, "fraud_bar.png"),
                 dpi=100, bbox_inches="tight")
     plt.close()
@@ -48,7 +50,7 @@ def generate_all(db, root_path):
         ax.set_ylabel("Count")
         plt.xticks(rotation=20, ha="right", fontsize=9)
         clean(ax)
-        plt.tight_layout()
+        plt.tight_layout(pad=2.0)
         plt.savefig(os.path.join(charts_dir, "payment_apps.png"),
                     dpi=100, bbox_inches="tight")
         plt.close()
@@ -68,7 +70,7 @@ def generate_all(db, root_path):
         ax.set_ylabel("Count")
         ax.set_xticks(range(0, 24))
         clean(ax)
-        plt.tight_layout()
+        plt.tight_layout(pad=2.0)
         plt.savefig(os.path.join(charts_dir, "hourly.png"),
                     dpi=100, bbox_inches="tight")
         plt.close()
@@ -84,7 +86,7 @@ def generate_all(db, root_path):
         ax.pie(tcnts, labels=types, autopct="%1.1f%%", colors=COLORS,
                startangle=140, wedgeprops={"edgecolor": "white", "linewidth": 1.5})
         ax.set_title("Transaction Type Distribution", fontweight="bold")
-        plt.tight_layout()
+        plt.tight_layout(pad=2.0)
         plt.savefig(os.path.join(charts_dir, "txn_pie.png"),
                     dpi=100, bbox_inches="tight")
         plt.close()

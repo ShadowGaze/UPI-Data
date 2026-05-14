@@ -55,10 +55,8 @@ def already_loaded(conn):
 
 
 def load_all():
-    print("Initialising database...")
     conn = init_db()
     if already_loaded(conn):
-        print("Data already loaded, skipping.")
         conn.close()
         return
     data_dir = os.environ.get("DATA_DIR", "data")
@@ -67,9 +65,7 @@ def load_all():
         ("merchants",    "merchants.csv",    10000),
         ("transactions", "transactions.csv", 7000),
     ]:
-        print(f"Loading {table}...")
         n = load_csv(conn, table, os.path.join(data_dir, filename), limit)
-        print(f"  {n} rows loaded")
     conn.close()
     print("Done.")
 

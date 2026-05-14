@@ -17,11 +17,11 @@
       <li><a href="{{ url_for('main.index') }}"
         class="{{ 'active' if request.endpoint == 'main.index' else '' }}">Home</a></li>
       <li><a href="{{ url_for('transactions.list_transactions') }}"
-        class="{{ 'active' if 'transactions' in request.endpoint else '' }}">Transactions</a></li>
+        class="{{ 'active' if request.endpoint and 'transactions' in request.endpoint else '' }}">Transactions</a></li>
       <li><a href="{{ url_for('users.list_users') }}"
-        class="{{ 'active' if 'users' in request.endpoint else '' }}">Users</a></li>
+        class="{{ 'active' if request.endpoint and 'users' in request.endpoint else '' }}">Users</a></li>
       <li><a href="{{ url_for('merchants.list_merchants') }}"
-        class="{{ 'active' if 'merchants' in request.endpoint else '' }}">Merchants</a></li>
+        class="{{ 'active' if request.endpoint and 'merchants' in request.endpoint else '' }}">Merchants</a></li>
       <li><a href="{{ url_for('analysis.analysis') }}"
         class="{{ 'active' if request.endpoint == 'analysis.analysis' else '' }}">Analysis</a></li>
     </ul>
@@ -33,7 +33,7 @@
 </main>
 
 <footer class="footer">
-  <p>PayGuard — Digital Payment Fraud Analysis | CS551P Advanced Programming</p>
+  <p>PayGuard — Digital Payment Analysis | CS551P Advanced Programming</p>
 </footer>
 
 </body>

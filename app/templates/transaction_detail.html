@@ -31,8 +31,8 @@
   <div class="card">
     <h3>Risk Signals</h3>
     <table class="detail-table">
-      <tr><th>New Device</th><td class="{{ 'risk-yes' if txn['new_device_flag'] else '' }}">{{ 'Yes ⚠️' if txn['new_device_flag'] else 'No' }}</td></tr>
-      <tr><th>IP Mismatch</th><td class="{{ 'risk-yes' if txn['ip_location_mismatch'] else '' }}">{{ 'Yes ⚠️' if txn['ip_location_mismatch'] else 'No' }}</td></tr>
+      <tr><th>New Device</th><td class="{{ 'risk-yes' if txn['new_device_flag'] else '' }}">{{ 'Yes ' if txn['new_device_flag'] else 'No' }}</td></tr>
+      <tr><th>IP Mismatch</th><td class="{{ 'risk-yes' if txn['ip_location_mismatch'] else '' }}">{{ 'Yes ' if txn['ip_location_mismatch'] else 'No' }}</td></tr>
       <tr><th>Failed Attempts (24h)</th><td>{{ txn['failed_attempts_last_24h'] }}</td></tr>
       <tr><th>Txn Velocity</th><td>{{ txn['transaction_velocity'] }}</td></tr>
       <tr><th>Amount Deviation</th><td>{{ txn['amount_deviation_score'] }}</td></tr>
@@ -52,7 +52,7 @@
       <tr><th>KYC Status</th><td>{{ user['kyc_status'] }}</td></tr>
       <tr><th>Preferred App</th><td>{{ user['preferred_app'] }}</td></tr>
       <tr><th>Loyalty Score</th><td>{{ user['user_loyalty_score'] }}</td></tr>
-      <tr><th>High Risk</th><td class="{{ 'risk-yes' if user['is_high_risk_user'] else '' }}">{{ 'Yes ⚠️' if user['is_high_risk_user'] else 'No' }}</td></tr>
+      <tr><th>High Risk</th><td class="{{ 'risk-yes' if user['is_high_risk_user'] else '' }}">{{ 'Yes ' if user['is_high_risk_user'] else 'No' }}</td></tr>
     </table>
   </div>
   {% endif %}

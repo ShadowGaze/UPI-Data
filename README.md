@@ -29,7 +29,7 @@ A Flask web application for exploring and analysing UPI digital payment transact
 ### 1. Clone the repository
 
 ```bash
-git clone <your-repo-url>
+git clone <https://github.com/ShadowGaze/UPI-Data.git>
 cd fraud_app
 ```
 
@@ -86,8 +86,8 @@ Visit: [http://127.0.0.1:5000](http://127.0.0.1:5000)
 
 ## Running Tests
 
-```bash
-pytest tests/ -v
+```Windows
+python -m pytest tests/ -v
 ```
 
 ***

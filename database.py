@@ -1,7 +1,6 @@
 import sqlite3
 import os
 
-DATABASE = os.environ.get('DATABASE_PATH', 'instance/app.db')
 
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS users (
@@ -68,9 +67,15 @@ CREATE TABLE IF NOT EXISTS transactions (
 """
 
 
+def get_db_path():
+    # reads fresh every call — never locked at import time
+    return os.environ.get('DATABASE_PATH', 'instance/app.db')
+
+
 def init_db():
-    os.makedirs(os.path.dirname(DATABASE), exist_ok=True)
-    conn = sqlite3.connect(DATABASE)
+    db_path = get_db_path()
+    os.makedirs(os.path.dirname(db_path), exist_ok=True)
+    conn = sqlite3.connect(db_path)
     conn.executescript(SCHEMA)
     conn.commit()
     return conn
